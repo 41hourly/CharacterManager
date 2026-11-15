@@ -1,37 +1,62 @@
 import com.unpri.charactermanager.model.Character;
+import com.unpri.charactermanager.model.CharacterManager;
 import com.unpri.charactermanager.model.CharacterType;
+import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) {
+        CharacterManager manager = new CharacterManager();
 
-        System.out.println("=== Character Manager v0.1 ===");
+        System.out.println("=== 1. Menambah Karakter Baru ===");
+        Character c1 = new Character("Arthur", CharacterType.WARRIOR, 1);
+        Character c2 = new Character("Lyra", CharacterType.MAGE, 3);
+        Character c3 = new Character("Robin", CharacterType.ARCHER, 2);
+        Character c4 = new Character("Elena", CharacterType.HEALER, 2);
 
-        Character hero = new Character("Arjuna", CharacterType.WARRIOR, 5);
-        Character wizard = new Character("Merlin", CharacterType.MAGE, 3);
-        Character scout = new Character("Athena", CharacterType.ARCHER, 4);
+        manager.addCharacter(c1);
+        manager.addCharacter(c2);
+        manager.addCharacter(c3);
+        manager.addCharacter(c4);
 
-        System.out.println(hero);
-        System.out.println(wizard);
-        System.out.println(scout);
+        manager.printAllCharacters();
 
-        System.out.println();
-        System.out.println(">> " + hero.getName() + " level up! ");
-        hero.setLevel(hero.getLevel() + 1);
-        System.out.println("After level up: " + hero);
+        System.out.println("\n=== 2. Mencari Karakter Berdasarkan ID ===");
+        Character foundById = manager.findById(2);
+        System.out.println("Hasil cari ID 2: " + foundById);
 
-        System.out.println();
-        System.out.println(">> Nama karakter: " + hero.getName());
-        System.out.println(">> Jenis karakter: " + hero.getType());
-        System.out.println(">> HP saat ini: " + hero.getHitPoints());
+        System.out.println("\n=== 3. Mencari Karakter Berdasarkan Nama ===");
+        List<Character> foundByName = manager.findByName("arthur");
+        for (Character c : foundByName) {
+            System.out.println("Hasil cari nama 'arthur': " + c);
+        }
 
-        // --- Pengujian Fitur Baru (Bagian B) ---
-        System.out.println();
-        System.out.println("=== Uji Fitur Ekstensi (Mana & isAlive) ===");
-        Character healer = new Character("Slavia", CharacterType.HEALER, 2);
-        healer.setMana(120); // Mengatur mana
-        
-        System.out.println(healer);
-        System.out.println(">> Apakah " + healer.getName() + " masih hidup? " + healer.isAlive());
-        System.out.println(">> Mana saat ini: " + healer.getMana());
+        System.out.println("\n=== 4. Update Level dan Mana ===");
+        boolean levelUpdated = manager.setCharacterLevel(1, 5);
+        boolean manaUpdated = manager.setCharacterMana(2, 120);
+        System.out.println("Update level Arthur (ID 1): " + levelUpdated);
+        System.out.println("Update mana Lyra (ID 2): " + manaUpdated);
+        System.out.println("Status terbaru Arthur: " + manager.findById(1));
+        System.out.println("Status terbaru Lyra: " + manager.findById(2));
+
+        System.out.println("\n=== 5. Menguji Validasi Error (Level & Mana) ===");
+        try {
+            manager.setCharacterLevel(1, 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Tertangkap error level valid: " + e.getMessage());
+        }
+
+        try {
+            manager.setCharacterMana(2, -10);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Tertangkap error mana valid: " + e.getMessage());
+        }
+
+        System.out.println("\n=== 6. Menghapus Karakter (ID 3) ===");
+        boolean removed = manager.removeCharacter(3);
+        System.out.println("Berhasil hapus ID 3? " + removed);
+
+        System.out.println("\n=== Daftar Karakter Akhir ===");
+        manager.printAllCharacters();
     }
 }
