@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.List;
@@ -84,9 +85,10 @@ public class MainWindow extends JFrame {
                 AppTheme.CARD_BORDER
         ));
 
-        JLabel legendTitle = new JLabel("LEGENDA ROLE");
+        JLabel legendTitle = new JLabel("LEGENDA ROLE", SwingConstants.CENTER);
         legendTitle.setFont(AppTheme.FONT_BODY);
         legendTitle.setForeground(AppTheme.GOLD);
+        legendTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         legendPanel.add(legendTitle);
         legendPanel.add(Box.createVerticalStrut(10));
 
