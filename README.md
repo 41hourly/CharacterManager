@@ -1,22 +1,17 @@
-## TP8 — Character Manager Sprint #3 (MainWindow, Data Dinamis & Analisis MVC)
+## TP10 — Character Manager Sprint #4 (Theming & MVC Properties)
 
-### 2. Screenshot Aplikasi
-1. Screenshot 2026-10-22 134433.png
-2. Screenshot 2026-10-22 135148.png
+### 📸 Screenshot Perbandingan Tampilan
+1. Screenshot 2026-10-22 135148.png
+2. Screenshot 2026-10-31 015130.png
 
-### 2. Aliran Data & Kaitannya dengan Prinsip MVC
-* Aliran data dimulai dari kelas `Main` yang menginisialisasi objek dan mendaftarkan data karakter ke dalam `CharacterManager`.
-* `CharacterManager` bertindak sebagai **Model** yang menyimpan serta mengelola seluruh data koleksi karakter dan perhitungan logika bisnis[cite: 1].
-* Objek data tersebut kemudian diteruskan ke `MainWindow` yang bertindak sebagai **View** untuk dirender dan ditampilkan secara dinamis ke antarmuka grafis pengguna[cite: 1].
-* Pemisahan tugas ini menerapkan prinsip arsitektur **MVC (Model-View-Controller)**, di mana logika data terisolasi dari tampilan visual agar kode lebih terstruktur[cite: 1].
+### 🎨 Alasan Arsitektur MVC pada Pengaturan Warna
+Warna dan aspek visual disimpan di `AppTheme` (`view`) dan **bukan** sebagai atribut pada class `Character` (`model`) untuk menjaga **pola pemisahan tanggung jawab MVC**. Class `Character` murni bertanggung jawab mengelola state dan logika domain bisnis karakter (seperti level, nama, dan perhitungan status). Jika `Character` mengimpor library Swing/AWT (`java.awt.Color`), layer Model akan terikat kuat (*tightly coupled*) pada framework GUI desktop. Hal ini membuat layer Model sulit diuji (*unit testing*) secara independen dan menghambat migrasi jika aplikasi di masa depan beralih ke platform lain (seperti CLI, Android, atau web).
 
-### 3. Daftar Karakter (Termasuk Karakter Baru & Alasan Pemilihan)
-Berikut adalah daftar 5 karakter yang dimuat di dalam aplikasi:
-* **Arjuna (WARRIOR, Level 5)**: Dipilih sebagai tipe pejuang garis depan dengan keseimbangan HP dan attack power yang solid[cite: 2].
-* **Merlin (MAGE, Level 3)**: Dipilih sebagai karakter penyihir dengan kemampuan sihir khusus[cite: 2].
-* **Athena (ARCHER, Level 4)**: Dipilih sebagai pemanah tangkas dengan fleksibilitas serangan jarak jauh[cite: 2].
-* **Valeera (ASSASSIN, Level 5)**: Karakter baru yang dipilih karena memiliki tipe kelincahan tinggi dan serangan mematikan.
-* **Malganis (TANK, Level 7)**: Karakter baru yang dipilih untuk melengkapi komposisi tim dengan ketahanan HP maksimal di lini depan.
+### ⚙️ Dua Properti Tambahan yang Dipilih
+1. **Border Khusus Per Role (`BorderFactory.createCompoundBorder`)**:
+   - **Alasan**: Memberikan penanda visual berupa garis tepi dengan warna aksen yang lebih terang di sekeliling kartu karakter, dikombinasikan dengan *empty padding* di dalam. Hal ini mempertegas batas antar-kartu dan meningkatkan pembacaan hirarki visual per *role*.
+2. **Tooltip Rich-Text Dinamis (`setToolTipText`)**:
+   - **Alasan**: Menampilkan pop-up informasi detail saat kursor melayang (*hover*) di atas kartu karakter, mencakup deskripsi peranan *role* dan rincian HP/ATK. Ini memberikan konteks tambahan bagi pengguna tanpa membuat tampilan kartu utama menjadi terlalu sesak (*cluttered*).
 
-### Laporan Analisis Lengkap
-Link Google Docs Analisis GUI & MVC : https://docs.google.com/document/d/1ggPZxv__ukDL2dmZWv-7JK11ZK05elbqGsXBY1PNacE/edit?usp=sharing
+### 🔗 Link Google Docs Dokumen Analisis (Bagian D)
+- **Dokumen Analisis**: (https://docs.google.com/document/d/1tW88ii4xXW0AZJgbLblK-nez2Aw23w2EI8kjpsao6BQ/edit?usp=sharing)
