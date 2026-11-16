@@ -34,7 +34,7 @@ public class MainWindow extends JFrame {
         rootPanel.setBackground(AppTheme.BG_MAIN);
         rootPanel.setBorder(AppTheme.CARD_BORDER);
 
-        // 1. NORTH: Header + Panel Statistik Tambahan (GridLayout 2x2)
+        // NORTH: Header + Panel Statistik Tambahan (GridLayout 2x2)
         JPanel northContainer = new JPanel(new BorderLayout(8, 8));
         northContainer.setBackground(AppTheme.BG_MAIN);
 
@@ -53,7 +53,7 @@ public class MainWindow extends JFrame {
         northContainer.add(statsPanel, BorderLayout.CENTER);
         rootPanel.add(northContainer, BorderLayout.NORTH);
 
-        // 2. CENTER: Daftar Kartu Karakter di dalam JScrollPane
+        // CENTER: Daftar Kartu Karakter di dalam JScrollPane
         JPanel cardsGridPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         cardsGridPanel.setBackground(AppTheme.BG_MAIN);
 
@@ -62,21 +62,20 @@ public class MainWindow extends JFrame {
             cardsGridPanel.add(createCharacterCard(character));
         }
 
-        // Grid kartu diletakkan di NORTH panel pembungkus sebelum masuk JScrollPane
         JPanel listWrapperPanel = new JPanel(new BorderLayout());
         listWrapperPanel.setBackground(AppTheme.BG_MAIN);
         listWrapperPanel.setBorder(AppTheme.CARD_BORDER);
         listWrapperPanel.add(cardsGridPanel, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane(listWrapperPanel);
-        scrollPane.setPreferredSize(new Dimension(560, 380));
+        scrollPane.setPreferredSize(new Dimension(560, 400));
         scrollPane.getViewport().setBackground(AppTheme.BG_MAIN);
         scrollPane.setBorder(BorderFactory.createLineBorder(AppTheme.TEXT_MAIN, 1));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         rootPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // 3. EAST: Legenda (BoxLayout Y_AXIS dari CharacterType.values() + Strut + Glue)
+        // EAST: Legenda (BoxLayout Y_AXIS dari CharacterType.values() + Strut + Glue)
         JPanel legendPanel = new JPanel();
         legendPanel.setLayout(new BoxLayout(legendPanel, BoxLayout.Y_AXIS));
         legendPanel.setBackground(AppTheme.BG_MAIN);
@@ -95,7 +94,9 @@ public class MainWindow extends JFrame {
             JPanel itemRow = new JPanel(new BorderLayout(8, 0));
             itemRow.setBackground(AppTheme.BG_MAIN);
             itemRow.setBorder(AppTheme.borderFor(type));
-            itemRow.setMaximumSize(new Dimension(260, 82));
+            itemRow.setMinimumSize(new Dimension(260, 82));
+            itemRow.setPreferredSize(new Dimension(270, 85));
+            itemRow.setMaximumSize(new Dimension(280, 90));
 
             JPanel colorBadge = new JPanel();
             colorBadge.setBackground(AppTheme.colorFor(type));
@@ -116,7 +117,7 @@ public class MainWindow extends JFrame {
         legendPanel.add(Box.createVerticalGlue());
         rootPanel.add(legendPanel, BorderLayout.EAST);
 
-        // 4. SOUTH: Bar Status (Teks di kiri, "v0.5" di kanan)
+        // SOUTH: Bar Status (Teks di kiri, "v0.5" di kanan)
         JPanel statusBarPanel = new JPanel(new BorderLayout());
         statusBarPanel.setBackground(AppTheme.BG_MAIN);
         statusBarPanel.setBorder(BorderFactory.createCompoundBorder(
