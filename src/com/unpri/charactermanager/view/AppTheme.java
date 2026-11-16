@@ -15,6 +15,9 @@ public final class AppTheme {
     public static final Color TEXT_LIGHT = Color.WHITE;
     public static final Color GOLD       = Color.decode("#fdcb6e");
 
+    public static final Color ERROR_RED     = new Color(235, 87, 87);
+    public static final Color SUCCESS_GREEN = new Color(72, 199, 142);
+
     public static final Font FONT_TITLE = new Font("SansSerif", Font.BOLD, 22);
     public static final Font FONT_BODY  = new Font("SansSerif", Font.PLAIN, 14);
     public static final Font FONT_MONO  = new Font("Monospaced", Font.PLAIN, 13);
@@ -30,6 +33,16 @@ public final class AppTheme {
             BorderFactory.createLineBorder(Color.decode("#55efc4"), 2), CARD_BORDER);
     public static final Border BORDER_HEALER = BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.decode("#a29bfe"), 2), CARD_BORDER);
+
+    public static final Border INPUT_BORDER_DEFAULT = BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(TEXT_MAIN, 1),
+            BorderFactory.createEmptyBorder(6, 8, 6, 8)
+    );
+
+    public static final Border INPUT_BORDER_ERROR = BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ERROR_RED, 2),
+            BorderFactory.createEmptyBorder(5, 7, 5, 7)
+    );
 
     private AppTheme() { }
 
