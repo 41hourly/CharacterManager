@@ -21,6 +21,9 @@ import java.util.List;
 public class MainWindow extends JFrame {
 
     private final CharacterManager manager;
+    private JPanel cardsGridPanel;
+    private JPanel statsContainer;
+    private JLabel statusLeftLabel;
 
     public MainWindow(CharacterManager manager) {
         this.manager = manager;
@@ -28,14 +31,14 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        setTitle("Character Manager v0.5");
+        setTitle("Character Manager v0.6");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel rootPanel = new JPanel(new BorderLayout(10, 10));
         rootPanel.setBackground(AppTheme.BG_MAIN);
         rootPanel.setBorder(AppTheme.CARD_BORDER);
 
-        // NORTH: Header + Panel Statistik Tambahan (GridLayout 2x2)
+        // NORTH: Header + Statistik + CharacterFormPanel
         JPanel northContainer = new JPanel(new BorderLayout(8, 8));
         northContainer.setBackground(AppTheme.BG_MAIN);
 
@@ -48,20 +51,25 @@ public class MainWindow extends JFrame {
         titleLabel.setForeground(AppTheme.GOLD);
         headerPanel.add(titleLabel, BorderLayout.CENTER);
 
-        JPanel statsPanel = buildStatsPanel();
+        statsContainer = new JPanel(new BorderLayout());
+        statsContainer.setBackground(AppTheme.BG_MAIN);
+        statsContainer.add(buildStatsPanel(), BorderLayout.CENTER);
 
-        northContainer.add(headerPanel, BorderLayout.NORTH);
-        northContainer.add(statsPanel, BorderLayout.CENTER);
+        CharacterFormPanel formPanel = new CharacterFormPanel(manager, this::refreshList);
+
+        JPanel topStack = new JPanel(new BorderLayout(8, 8));
+        topStack.setBackground(AppTheme.BG_MAIN);
+        topStack.add(headerPanel, BorderLayout.NORTH);
+        topStack.add(statsContainer, BorderLayout.CENTER);
+
+        northContainer.add(topStack, BorderLayout.NORTH);
+        northContainer.add(formPanel, BorderLayout.SOUTH);
         rootPanel.add(northContainer, BorderLayout.NORTH);
 
         // CENTER: Daftar Kartu Karakter di dalam JScrollPane
-        JPanel cardsGridPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        cardsGridPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         cardsGridPanel.setBackground(AppTheme.BG_MAIN);
-
-        List<Character> allCharacters = manager.getAllCharacters();
-        for (Character character : allCharacters) {
-            cardsGridPanel.add(createCharacterCard(character));
-        }
+        populateCards();
 
         JPanel listWrapperPanel = new JPanel(new BorderLayout());
         listWrapperPanel.setBackground(AppTheme.BG_MAIN);
@@ -69,14 +77,14 @@ public class MainWindow extends JFrame {
         listWrapperPanel.add(cardsGridPanel, BorderLayout.NORTH);
 
         JScrollPane scrollPane = new JScrollPane(listWrapperPanel);
-        scrollPane.setPreferredSize(new Dimension(560, 400));
+        scrollPane.setPreferredSize(new Dimension(560, 360));
         scrollPane.getViewport().setBackground(AppTheme.BG_MAIN);
         scrollPane.setBorder(BorderFactory.createLineBorder(AppTheme.TEXT_MAIN, 1));
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         rootPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // EAST: Legenda (BoxLayout Y_AXIS dari CharacterType.values() + Strut + Glue)
+        // EAST: Legenda Role
         JPanel legendPanel = new JPanel();
         legendPanel.setLayout(new BoxLayout(legendPanel, BoxLayout.Y_AXIS));
         legendPanel.setBackground(AppTheme.BG_MAIN);
@@ -119,7 +127,7 @@ public class MainWindow extends JFrame {
         legendPanel.add(Box.createVerticalGlue());
         rootPanel.add(legendPanel, BorderLayout.EAST);
 
-        // SOUTH: Bar Status (Teks di kiri, "v0.5" di kanan)
+        // SOUTH: Bar Status v0.6
         JPanel statusBarPanel = new JPanel(new BorderLayout());
         statusBarPanel.setBackground(AppTheme.BG_MAIN);
         statusBarPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -127,11 +135,11 @@ public class MainWindow extends JFrame {
                 AppTheme.CARD_BORDER
         ));
 
-        JLabel statusLeftLabel = new JLabel("Total Karakter: " + allCharacters.size() + " | Layout Responsif Aktif");
+        statusLeftLabel = new JLabel("Total Karakter: " + manager.getAllCharacters().size() + " | Form Input Aktif");
         statusLeftLabel.setFont(AppTheme.FONT_MONO);
         statusLeftLabel.setForeground(AppTheme.TEXT_MAIN);
 
-        JLabel statusRightLabel = new JLabel("v0.5");
+        JLabel statusRightLabel = new JLabel("v0.6");
         statusRightLabel.setFont(AppTheme.FONT_MONO);
         statusRightLabel.setForeground(AppTheme.GOLD);
 
@@ -143,6 +151,26 @@ public class MainWindow extends JFrame {
         setContentPane(rootPanel);
         pack();
         setLocationRelativeTo(null);
+    }
+
+    private void populateCards() {
+        cardsGridPanel.removeAll();
+        for (Character character : manager.getAllCharacters()) {
+            cardsGridPanel.add(createCharacterCard(character));
+        }
+    }
+
+    public void refreshList() {
+        populateCards();
+        cardsGridPanel.revalidate();
+        cardsGridPanel.repaint();
+
+        statsContainer.removeAll();
+        statsContainer.add(buildStatsPanel(), BorderLayout.CENTER);
+        statsContainer.revalidate();
+        statsContainer.repaint();
+
+        statusLeftLabel.setText("Total Karakter: " + manager.getAllCharacters().size() + " | Form Input Aktif");
     }
 
     private JPanel buildStatsPanel() {
