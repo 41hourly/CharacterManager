@@ -1,17 +1,46 @@
-## TP10 — Character Manager Sprint #4 (Theming & MVC Properties)
+## TP12 — Layout, UI Responsif & Analisis MVC (Sprint #5)
 
-### 📸 Screenshot Perbandingan Tampilan
-1. Screenshot 2026-10-22 135148.png
-2. Screenshot 2026-10-31 015130.png
+### Wireframe Tata Letak (`MainWindow v0.5`)
 
-### 🎨 Alasan Arsitektur MVC pada Pengaturan Warna
-Warna dan aspek visual disimpan di `AppTheme` (`view`) dan **bukan** sebagai atribut pada class `Character` (`model`) untuk menjaga **pola pemisahan tanggung jawab MVC**. Class `Character` murni bertanggung jawab mengelola state dan logika domain bisnis karakter (seperti level, nama, dan perhitungan status). Jika `Character` mengimpor library Swing/AWT (`java.awt.Color`), layer Model akan terikat kuat (*tightly coupled*) pada framework GUI desktop. Hal ini membuat layer Model sulit diuji (*unit testing*) secara independen dan menghambat migrasi jika aplikasi di masa depan beralih ke platform lain (seperti CLI, Android, atau web).
++-----------------------------------------------------------------------+
+| [NORTH] Header: CHARACTER MANAGER — ROSTER                            |
+|         Statistik (GridLayout 2x2): Total | Lv>=5 | HP | ATK          |
++---------------------------------------------------+-------------------+
+| [CENTER] JScrollPane                              | [EAST] Legenda    |
+|  +---------------------------------------------+  | (BoxLayout Y_AXIS)|
+|  | [Wrapper BorderLayout -> NORTH]             |  | - WARRIOR         |
+|  |  +------------------+  +------------------+ |  | - MAGE            |
+|  |  | Kartu #1         |  | Kartu #2         | |  | - ARCHER          |
+|  |  +------------------+  +------------------+ |  | - HEALER          |
+|  |  +------------------+  +------------------+ |  |                   |
+|  |  | Kartu #3         |  | Kartu #4         | |  | [Vertical Glue]   |
+|  |  +------------------+  +------------------+ |  |                   |
+|  +---------------------------------------------+  |                   |
++---------------------------------------------------+-------------------+
+| [SOUTH] Bar Status: Total Karakter: 8 | Layout Responsif Aktif   v0.5 |
++-----------------------------------------------------------------------+
 
-### ⚙️ Dua Properti Tambahan yang Dipilih
-1. **Border Khusus Per Role (`BorderFactory.createCompoundBorder`)**:
-   - **Alasan**: Memberikan penanda visual berupa garis tepi dengan warna aksen yang lebih terang di sekeliling kartu karakter, dikombinasikan dengan *empty padding* di dalam. Hal ini mempertegas batas antar-kartu dan meningkatkan pembacaan hirarki visual per *role*.
-2. **Tooltip Rich-Text Dinamis (`setToolTipText`)**:
-   - **Alasan**: Menampilkan pop-up informasi detail saat kursor melayang (*hover*) di atas kartu karakter, mencakup deskripsi peranan *role* dan rincian HP/ATK. Ini memberikan konteks tambahan bagi pengguna tanpa membuat tampilan kartu utama menjadi terlalu sesak (*cluttered*).
+### Dokumentasi Screenshot
+1. **Ukuran Awal (`pack()`):**
+   ![Ukuran Awal](Screenshot 2026-11-16 214431.png)
+2. **Jendela Dilebarkan:**
+   ![Jendela Dilebarkan](Screenshot 2026-11-16 214504.png)
+3. **Jendela Dikecilkan (Scrollbar Vertikal Tampak):**
+   ![Jendela Dikecilkan](Screenshot 2026-11-16 214948.png)
 
-### 🔗 Link Google Docs Dokumen Analisis (Bagian D)
-- **Dokumen Analisis**: (https://docs.google.com/document/d/1tW88ii4xXW0AZJgbLblK-nez2Aw23w2EI8kjpsao6BQ/edit?usp=sharing)
+### Tabel Pengamatan Resize (Prediksi vs Hasil)
+
+| Kondisi Jendela | Prediksi Perilaku Layout | Hasil Aktual Saat Dijalankan |
+| :--- | :--- | :--- |
+| **Ukuran Awal** | Semua wilayah (`NORTH`, `CENTER`, `EAST`, `SOUTH`) tampil rapi sesuai ukuran awal dan *preferred size* komponen. | Seluruh bagian tampil sesuai prediksi; header, statistik 2x2, 8 kartu karakter dalam 2 kolom, legenda di kanan, serta label `"v0.5"` terlihat jelas[cite: 5]. |
+| **Jendela Dilebarkan** | Wilayah `CENTER` akan melebar mengisi ruang tambahan, sedangkan panel legenda di `EAST` tetap tertata rapi dengan *vertical glue*. | Sesuai prediksi: ruang `CENTER` melebar mengikuti ukuran jendela dan tinggi kartu tidak memanjang berlebihan karena dibungkus ke `NORTH` panel pembungkus. |
+| **Jendela Dikecilkan** | Saat tinggi `CENTER` menyusut lebih kecil dari tinggi daftar kartu, `JScrollPane` akan menampilkan *scrollbar* vertikal. | Sesuai prediksi: *scrollbar* vertikal muncul pada panel daftar karakter dan seluruh kartu tetap dapat digulir. |
+
+### Struktur Panel Bersarang
+Aplikasi menggunakan `rootPanel` berlayout `BorderLayout` sebagai wadah utama dengan empat wilayah aktif: `NORTH`, `CENTER`, `EAST`, dan `SOUTH`. Bagian `NORTH` menggabungkan header dan panel statistik (`GridLayout 2x2`), sedangkan bagian `CENTER` menempatkan grid kartu dua kolom di posisi `NORTH` panel pembungkus di dalam `JScrollPane`. Wilayah `EAST` menyusun legenda peran secara vertikal menggunakan `BoxLayout` (`Y_AXIS`) dengan *strut* dan *glue*, sementara wilayah `SOUTH` memakai `BorderLayout` untuk menempatkan teks status di kiri dan `"v0.5"` di kanan[cite: 5].
+
+### Alasan Panel Tambahan & Layout yang Ditolak
+Panel tambahan yang dipilih adalah **panel statistik ringkas** menggunakan **`GridLayout(2, 2)`** di bawah header karena keempat informasi ringkasan (`Total Karakter`, `Level >= 5`, `Total HP`, dan `Total ATK`) memiliki porsi yang setara sehingga tampak rapi dalam kotak 2x2[cite: 5]. Saya menolak **`FlowLayout`** untuk panel ini karena komponennya cenderung berpindah baris secara tidak konsisten saat lebar jendela berubah.
+
+### Link Analisis Bagian D (Google Docs)
+* [Analisis Layout & MVC — TP12 (Google Docs)](https://docs.google.com/document/d/11f6pME8ze9TykQ5CT3m9dmvUi5kF80PRzHWXUVmG1NQ/edit?usp=sharing)
