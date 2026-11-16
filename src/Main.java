@@ -10,18 +10,21 @@ import javax.swing.UIManager;
 public class Main {
 
     public static void main(String[] args) {
-        // Opsional: menyelaraskan warna dasar Swing dengan AppTheme
         UIManager.put("Panel.background", AppTheme.BG_MAIN);
         UIManager.put("Label.foreground", AppTheme.TEXT_MAIN);
         UIManager.put("Label.font", AppTheme.FONT_BODY);
 
         CharacterManager manager = new CharacterManager();
 
-        // Data awal menggunakan CharacterType yang sesuai (WARRIOR, MAGE, ARCHER, HEALER)
-        manager.addCharacter(new Character("Arthur", CharacterType.WARRIOR, 1));
-        manager.addCharacter(new Character("Lyra", CharacterType.MAGE, 3));
-        manager.addCharacter(new Character("Robin", CharacterType.ARCHER, 2));
-        manager.addCharacter(new Character("Elena", CharacterType.HEALER, 2));
+        // Minimal 8 karakter dengan variasi level dan role (WARRIOR, MAGE, ARCHER, HEALER)
+        manager.addCharacter(new Character("Arthur", CharacterType.WARRIOR, 6));
+        manager.addCharacter(new Character("Lyra", CharacterType.MAGE, 5));
+        manager.addCharacter(new Character("Robin", CharacterType.ARCHER, 3));
+        manager.addCharacter(new Character("Elena", CharacterType.HEALER, 4));
+        manager.addCharacter(new Character("Garrick", CharacterType.WARRIOR, 2));
+        manager.addCharacter(new Character("Seraphina", CharacterType.MAGE, 8));
+        manager.addCharacter(new Character("Kael", CharacterType.ARCHER, 5));
+        manager.addCharacter(new Character("Mirelle", CharacterType.HEALER, 1));
 
         SwingUtilities.invokeLater(() -> {
             MainWindow window = new MainWindow(manager);
