@@ -1,46 +1,37 @@
-## TP12 — Layout, UI Responsif & Analisis MVC (Sprint #5)
+## TP14 — Form Input, Validasi & Analisis MVC (Sprint #6)
 
-### Wireframe Tata Letak (`MainWindow v0.5`)
+### Dokumentasi Screenshot Validasi
+1. **Error Nama Kosong (Border Merah + Pesan Inline + Fokus Field):**
+   ![Error Nama Kosong](screenshots/sprint6-run.png/Screenshot 2026-11-16 224602.png)
+2. **Error Nama Duplikat:**
+   ![Error Nama Duplikat](screenshots/sprint6-run.png/Screenshot 2026-11-16 224643.png)
+3. **Sukses Menambahkan Karakter Baru (Kartu Muncul Lewat `refreshList()`):**
+   ![Sukses Karakter Baru](screenshots/sprint6-run.png/Screenshot 2026-11-16 224821.png)
 
-+-----------------------------------------------------------------------+
-| [NORTH] Header: CHARACTER MANAGER — ROSTER                            |
-|         Statistik (GridLayout 2x2): Total | Lv>=5 | HP | ATK          |
-+---------------------------------------------------+-------------------+
-| [CENTER] JScrollPane                              | [EAST] Legenda    |
-|  +---------------------------------------------+  | (BoxLayout Y_AXIS)|
-|  | [Wrapper BorderLayout -> NORTH]             |  | - WARRIOR         |
-|  |  +------------------+  +------------------+ |  | - MAGE            |
-|  |  | Kartu #1         |  | Kartu #2         | |  | - ARCHER          |
-|  |  +------------------+  +------------------+ |  | - HEALER          |
-|  |  +------------------+  +------------------+ |  |                   |
-|  |  | Kartu #3         |  | Kartu #4         | |  | [Vertical Glue]   |
-|  |  +------------------+  +------------------+ |  |                   |
-|  +---------------------------------------------+  |                   |
-+---------------------------------------------------+-------------------+
-| [SOUTH] Bar Status: Total Karakter: 8 | Layout Responsif Aktif   v0.5 |
-+-----------------------------------------------------------------------+
+### Penempatan Aturan Validasi Tambahan
+1. **Aturan Format Nama (Hanya huruf, angka, dan spasi tunggal; menolak simbol & spasi ganda) — Diletakkan di `View` (`CharacterFormPanel.validateName`):**
+   Aturan ini berfokus pada format input teks dari pengguna sebelum objek domain dibuat, sehingga validasi dapat berjalan berurutan (kelengkapan → panjang → format → keunikan) dan memberikan umpan balik langsung di form.
+2. **Batas Maksimal 20 Karakter di Daftar Roster — Diletakkan di `Model` (`CharacterManager.addCharacter`):**
+   Batas kapasitas koleksi data adalah aturan domain/invarian roster yang harus tetap terjaga meskipun karakter ditambahkan dari jalur selain form (misalnya saat pemuatan data eksternal).
 
-### Dokumentasi Screenshot
-1. **Ukuran Awal (`pack()`):**
-   ![Ukuran Awal](Screenshot 2026-11-16 214431.png)
-2. **Jendela Dilebarkan:**
-   ![Jendela Dilebarkan](Screenshot 2026-11-16 214504.png)
-3. **Jendela Dikecilkan (Scrollbar Vertikal Tampak):**
-   ![Jendela Dikecilkan](Screenshot 2026-11-16 214948.png)
+### Tabel Pengujian Validasi (8 Kasus)
 
-### Tabel Pengamatan Resize (Prediksi vs Hasil)
+| No | Input (`Nama`, `Role`, `Level`) | Hasil Diharapkan | Hasil Nyata | Lapisan Penangkap |
+| :- | :--- | :--- | :--- | :--- |
+| 1 | `""` (kosong), `WARRIOR`, `10` | Ditolak; border nama merah, fokus kembali ke field nama, pesan kelengkapan tampil. | Sesuai harapan; pesan error kelengkapan tampil, border nama merah, dan fokus kembali ke field nama. | **View** (`CharacterFormPanel`) |
+| 2 | `"   "` (spasi saja), `MAGE`, `5` | Setelah `trim()` kosong, ditolak dengan pesan kelengkapan. | Sesuai harapan; input dibersihkan dengan `trim()` lalu ditolak dengan pesan kelengkapan. | **View** (`CharacterFormPanel`) |
+| 3 | `"A"`, `ARCHER`, `12` | Ditolak karena panjang nama kurang dari batas minimum (2 karakter). | Sesuai harapan; muncul pesan bahwa panjang nama harus 2–20 karakter. | **View** (`CharacterFormPanel`) |
+| 4 | `"Zed@99"`, `WARRIOR`, `15` | Ditolak karena mengandung karakter simbol `@` yang tidak sesuai format. | Sesuai harapan; ditolak oleh aturan format di `validateName` dengan pesan spesifik. | **View** (`CharacterFormPanel`) |
+| 5 | `"Arthur"`, `WARRIOR`, `20` | Ditolak karena nama sudah terdaftar di roster. | Sesuai harapan; `isNameTaken()` mendeteksi duplikasi dan menampilkan pesan error. | **View** (`CharacterFormPanel`) |
+| 6 | `"Merlin"`, `MAGE`, `65` | Ditolak karena `MAGE` tidak boleh memiliki level di atas 60 (Mini-Challenge). | Sesuai harapan; `Character` melempar `IllegalArgumentException` dan form menampilkan pesan dari `ex.getMessage()`. | **Model** (`Character`) |
+| 7 | `"Valkyrie"`, `HEALER`, `105` | Ditolak karena level berada di luar rentang `1–99`. | Sesuai harapan; nilai di luar rentang `1–99` ditolak dan pesan error ditampilkan. | **View / Model** (`JSpinner` & `Character`) |
+| 8 | `"  Orion  "`, `ARCHER`, `25` | Nama di-`trim()` menjadi `"Orion"`, kartu baru langsung tampil via `refreshList()`. | Sesuai harapan; kartu karakter baru muncul di daftar dan statistik/status bar ikut diperbarui. | **Lolos Validasi (Sukses)** |
 
-| Kondisi Jendela | Prediksi Perilaku Layout | Hasil Aktual Saat Dijalankan |
-| :--- | :--- | :--- |
-| **Ukuran Awal** | Semua wilayah (`NORTH`, `CENTER`, `EAST`, `SOUTH`) tampil rapi sesuai ukuran awal dan *preferred size* komponen. | Seluruh bagian tampil sesuai prediksi; header, statistik 2x2, 8 kartu karakter dalam 2 kolom, legenda di kanan, serta label `"v0.5"` terlihat jelas[cite: 5]. |
-| **Jendela Dilebarkan** | Wilayah `CENTER` akan melebar mengisi ruang tambahan, sedangkan panel legenda di `EAST` tetap tertata rapi dengan *vertical glue*. | Sesuai prediksi: ruang `CENTER` melebar mengikuti ukuran jendela dan tinggi kartu tidak memanjang berlebihan karena dibungkus ke `NORTH` panel pembungkus. |
-| **Jendela Dikecilkan** | Saat tinggi `CENTER` menyusut lebih kecil dari tinggi daftar kartu, `JScrollPane` akan menampilkan *scrollbar* vertikal. | Sesuai prediksi: *scrollbar* vertikal muncul pada panel daftar karakter dan seluruh kartu tetap dapat digulir. |
+#### Catatan Perbedaan & Tindakan Perbaikan
+* Tidak ada ketidaksesuaian antara hasil nyata dan hasil diharapkan setelah memastikan `spinner.commitEdit()` dipanggil sebelum membaca nilai `JSpinner` dan `refreshList()` memanggil `revalidate()` serta `repaint()`.
 
-### Struktur Panel Bersarang
-Aplikasi menggunakan `rootPanel` berlayout `BorderLayout` sebagai wadah utama dengan empat wilayah aktif: `NORTH`, `CENTER`, `EAST`, dan `SOUTH`. Bagian `NORTH` menggabungkan header dan panel statistik (`GridLayout 2x2`), sedangkan bagian `CENTER` menempatkan grid kartu dua kolom di posisi `NORTH` panel pembungkus di dalam `JScrollPane`. Wilayah `EAST` menyusun legenda peran secara vertikal menggunakan `BoxLayout` (`Y_AXIS`) dengan *strut* dan *glue*, sementara wilayah `SOUTH` memakai `BorderLayout` untuk menempatkan teks status di kiri dan `"v0.5"` di kanan[cite: 5].
-
-### Alasan Panel Tambahan & Layout yang Ditolak
-Panel tambahan yang dipilih adalah **panel statistik ringkas** menggunakan **`GridLayout(2, 2)`** di bawah header karena keempat informasi ringkasan (`Total Karakter`, `Level >= 5`, `Total HP`, dan `Total ATK`) memiliki porsi yang setara sehingga tampak rapi dalam kotak 2x2[cite: 5]. Saya menolak **`FlowLayout`** untuk panel ini karena komponennya cenderung berpindah baris secara tidak konsisten saat lebar jendela berubah.
+### Kompromi Sementara (Sprint #6)
+Pada implementasi Sprint #6 ini, penanganan submit form masih menggunakan `ActionListener` minimal di dalam `CharacterFormPanel` yang langsung memanggil `manager.addCharacter(newChar)` pada lapisan *View*. Hal ini dipilih sebagai kompromi sementara agar alur validasi dua lapis dan pembaruan daftar (`refreshList()`) dapat diuji secara langsung tanpa menambah kelas perantara sebelum materi *Controller* dan *Observer* diterapkan. Pada Pertemuan 9, pemanggilan langsung ke `CharacterManager` dari *View* akan dipindahkan ke kelas *Controller* khusus sehingga pemisahan tanggung jawab MVC menjadi semakin rapi.
 
 ### Link Analisis Bagian D (Google Docs)
-* [Analisis Layout & MVC — TP12 (Google Docs)](https://docs.google.com/document/d/11f6pME8ze9TykQ5CT3m9dmvUi5kF80PRzHWXUVmG1NQ/edit?usp=sharing)
+* [Analisis Input & Validasi MVC — TP14 (Google Docs)](https://docs.google.com/document/d/1i3PItcTh8meCkmxqnIrHgi42e921HnH0aq2_eSJBA-Y/edit?usp=sharing)
