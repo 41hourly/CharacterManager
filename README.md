@@ -1,35 +1,22 @@
-# Character Manager - TP5 (Java Visual SIH-6406)
+## TP8 — Character Manager Sprint #3 (MainWindow, Data Dinamis & Analisis MVC)
 
-Character Manager adalah aplikasi berbasis konsol Java yang dirancang untuk mengelola data karakter game (seperti Warrior, Mage, Archer, dan Healer) dengan menerapkan konsep Object-Oriented Programming (OOP) seperti enkapsulasi, enum, konstruktor ganda, dan validasi data.
+### 2. Screenshot Aplikasi
+1. Screenshot 2026-10-22 134433.png
+2. Screenshot 2026-10-22 135148.png
 
-# Bagian C — Penjelasan Rasional Fitur Mandiri (findStrongest)
+### 2. Aliran Data & Kaitannya dengan Prinsip MVC
+* Aliran data dimulai dari kelas `Main` yang menginisialisasi objek dan mendaftarkan data karakter ke dalam `CharacterManager`.
+* `CharacterManager` bertindak sebagai **Model** yang menyimpan serta mengelola seluruh data koleksi karakter dan perhitungan logika bisnis[cite: 1].
+* Objek data tersebut kemudian diteruskan ke `MainWindow` yang bertindak sebagai **View** untuk dirender dan ditampilkan secara dinamis ke antarmuka grafis pengguna[cite: 1].
+* Pemisahan tugas ini menerapkan prinsip arsitektur **MVC (Model-View-Controller)**, di mana logika data terisolasi dari tampilan visual agar kode lebih terstruktur[cite: 1].
 
-​Pada kelas CharacterManager, kami menambahkan fitur analitik mandiri yaitu method findStrongest(). Method ini dirancang untuk memindai seluruh karakter yang tersimpan di dalam ArrayList<Character> dan mengembalikan objek Character yang memiliki nilai attackPower terbesar.
-​Rasionalitas & Penerapan Enkapsulasi:
-​Kegunaan Analitik: Fitur ini mempermudah sistem dalam menentukan pemain/karakter terkuat untuk keperluan statistik, arena battle, atau penentuan leaderboard.
-​Penanganan Kasus Khusus (Corner Cases): Jika characterList berada dalam keadaan kosong, method akan secara aman mengembalikan nilai null tanpa menyebabkan crash/IndexOutOfBoundsException.
-​Penerapan Enkapsulasi & Reference: Method ini mengembalikan reference ke objek Character yang ada atau null. Objek ArrayList<Character> utama (characterList) tetap tersembunyi dengan modifier private di dalam CharacterManager, sehingga struktur data internal tidak dapat diubah dari luar tanpa melalui mekanisme method yang sah.
+### 3. Daftar Karakter (Termasuk Karakter Baru & Alasan Pemilihan)
+Berikut adalah daftar 5 karakter yang dimuat di dalam aplikasi:
+* **Arjuna (WARRIOR, Level 5)**: Dipilih sebagai tipe pejuang garis depan dengan keseimbangan HP dan attack power yang solid[cite: 2].
+* **Merlin (MAGE, Level 3)**: Dipilih sebagai karakter penyihir dengan kemampuan sihir khusus[cite: 2].
+* **Athena (ARCHER, Level 4)**: Dipilih sebagai pemanah tangkas dengan fleksibilitas serangan jarak jauh[cite: 2].
+* **Valeera (ASSASSIN, Level 5)**: Karakter baru yang dipilih karena memiliki tipe kelincahan tinggi dan serangan mematikan.
+* **Malganis (TANK, Level 7)**: Karakter baru yang dipilih untuk melengkapi komposisi tim dengan ketahanan HP maksimal di lini depan.
 
-## Screenshot Output Terminal
-
-![Screenshot Output](Screenshot 2026-10-17 101305.png)
-
-## Struktur Folder Project
-
-```text
-AP3_Tugas/
-├── Screenshot 2026-10-17 101305.png
-├── README.md
-└── src/
-    ├── Main.java
-    └── com/
-        └── unpri/
-            └── charactermanager/
-                └── model/
-                    ├── Character.java
-                    └── CharacterType.java
-
-Nama    : Slavia Praha Husada
-Nim     : (253303621221)
-Kelas   : Semester 3 Pagi A
-Link Google Docs :  https://docs.google.com/document/d/1KXVY3-9Y2yK-rjjoAye8Mm0wjhyL0hGETEIEPkdeZYQ/edit?usp=sharing
+### Laporan Analisis Lengkap
+Link Google Docs Analisis GUI & MVC : https://docs.google.com/document/d/1ggPZxv__ukDL2dmZWv-7JK11ZK05elbqGsXBY1PNacE/edit?usp=sharing
