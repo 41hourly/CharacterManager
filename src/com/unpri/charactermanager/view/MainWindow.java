@@ -95,7 +95,7 @@ public class MainWindow extends JFrame {
             JPanel itemRow = new JPanel(new BorderLayout(8, 0));
             itemRow.setBackground(AppTheme.BG_MAIN);
             itemRow.setBorder(AppTheme.borderFor(type));
-            itemRow.setMaximumSize(new Dimension(250, 60));
+            itemRow.setMaximumSize(new Dimension(260, 82));
 
             JPanel colorBadge = new JPanel();
             colorBadge.setBackground(AppTheme.colorFor(type));
